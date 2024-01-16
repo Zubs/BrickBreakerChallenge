@@ -30,17 +30,19 @@ def brick_collision(level: Level, ball: Ball):
     """
     for _, brick in enumerate(level.brick.bricks):
         x, y = brick
-        if (x < ball.position.x < (x + level.brick.length) and
-                y > ball.position.y > (y + level.brick.width)):
+        # if (x < ball.position.x < (x + level.brick.length) and
+        #         y > ball.position.y > (y + level.brick.width)):
+        if (x < ball.position.x < (x + level.brick.length) and 
+            y < ball.position.y < (y + level.brick.width)):
             # Invert the y direction
-            ball.y_vel = -ball.y_vel
+            ball.velocity.y_vel = -ball.velocity.y_vel
             center = x + level.brick.length/2
             if x < ball.position.x < center:
                 ratio = (center - ball.position.x) / (level.brick.length / 2)
-                ball.x_vel += -ball.max_x_vel * ratio
+                ball.velocity.x_vel += -ball.velocity.max_x_vel * ratio
             elif center < ball.position.x < (x + level.brick.length):
                 ratio = (ball.position.x - center) / (level.brick.length / 2)
-                ball.x_vel += ball.max_x_vel * ratio
+                ball.velocity.x_vel += ball.velocity.max_x_vel * ratio
 
             level.remove(brick)
 
