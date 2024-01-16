@@ -1,59 +1,96 @@
+"""
+This module defines the Ball class for a game. It includes methods for moving the ball,
+detecting collisions, and drawing the ball on the screen.
+"""
 import pygame
 
 from paddle import Paddle
-
+from position import Position
+from velocity import Velocity
 
 class Ball():
+    """
+    This class represents a ball in a game. It includes methods for moving the ball,
+    detecting collisions, and drawing the ball on the screen.
+    """
     color = (50, 40, 255)
 
-    def __init__(self, paddle: Paddle, screen: pygame.Surface):
-        self.ballX = int(screen.get_width()/2)
-        self.ballY = int(screen.get_height()*0.8)
-        self.x_vel = 8
-        self.y_vel = -8
+    def __init__(
+        self,
+        paddle: Paddle,
+        screen: pygame.Surface
+    ):
+        self.position = Position(int(screen.get_width() / 2), int(screen.get_height() * 0.8))
+        self.velocity = Velocity(8, -8)
         self.ball_radius = 10
-        self.max_x_vel = 10
         self.paddle = paddle
         self.screen = screen
 
     def show(self):
-
-        pygame.draw.circle(self.screen, self.color,
-                           (self.ballX, self.ballY), self.ball_radius)
+        """
+        This method draws a circle on the screen representing the ball.
+        """
+        position = (self.position.x, self.position.y)
+        pygame.draw.circle(
+            self.screen,
+            self.color,
+            position,
+            self.ball_radius
+        )
 
     def move(self):
-        self.ballX += self.x_vel
-        self.ballY += self.y_vel
+        """
+        This method updates the ball's position based on its velocity.
+        Basically moving it.
+        """
+        self.position.x += self.velocity.x_vel
+        self.position.y += self.velocity.y_vel
 
     def collision_change(self):
-        center = self.paddle.paddleX + self.paddle.length/2
-        left_end = self.paddle.paddleX
-        right_end = self.paddle.paddleX + self.paddle.length
-        self.y_vel = -self.y_vel
-        if left_end < self.ballX < center:
-            ratio = (center - self.ballX)/(self.paddle.length/2)
-            self.x_vel += -self.max_x_vel * ratio
-        elif center < self.ballX < right_end:
-            ratio = (self.ballX - center)/(self.paddle.length/2)
-            self.x_vel += self.max_x_vel * ratio
+        """
+        This method changes the ball's direction based on its collision with the paddle.
+        It also adjusts the x velocity based on where the ball hits the paddle.
+        """
+        center = self.paddle.paddle_x + self.paddle.length / 2
+        left_end = self.paddle.paddle_x
+        right_end = self.paddle.paddle_x + self.paddle.length
+        self.velocity.y_vel = -self.velocity.y_vel
+
+        if left_end < self.position.x < center:
+            ratio = (center - self.position.x) / (self.paddle.length / 2)
+            self.velocity.x_vel += -self.velocity.max_x_vel * ratio
+        elif center < self.position.x < right_end:
+            ratio = (self.position.x - center) / (self.paddle.length / 2)
+            self.velocity.x_vel += self.velocity.max_x_vel * ratio
 
     def boundries(self):
-
-        if self.ballY <= (0 + self.ball_radius):
-            self.y_vel = -self.y_vel
-        if self.ballX <= (0 + self.ball_radius):
-            self.x_vel = -self.x_vel
-        if self.ballX >= (self.screen.get_width() - self.ball_radius):
-            self.x_vel = -self.x_vel
+        """
+        This method checks if the ball has hit the boundaries of the screen.
+        If it has, it reverses the direction of the ball.
+        """
+        if self.position.y <= (0 + self.ball_radius):
+            self.velocity.y_vel = -self.velocity.y_vel
+        if self.position.x <= (0 + self.ball_radius):
+            self.velocity.x_vel = -self.velocity.x_vel
+        if self.position.x >= (self.screen.get_width() - self.ball_radius):
+            self.velocity.x_vel = -self.velocity.x_vel
 
     def limit_vel(self):
-
-        if -self.max_x_vel > self.x_vel:
-            self.x_vel = -self.max_x_vel
-        elif self.x_vel > self.max_x_vel:
-            self.x_vel = self.max_x_vel
+        """
+        This method limits the ball's x velocity to its maximum value.
+        If the ball's x velocity exceeds the maximum, it sets the x velocity to the maximum.
+        """
+        if -self.velocity.max_x_vel > self.velocity.x_vel:
+            self.velocity.x_vel = -self.velocity.max_x_vel
+        elif self.velocity.x_vel > self.velocity.max_x_vel:
+            self.velocity.x_vel = self.velocity.max_x_vel
 
     def update(self):
+        """
+        This method updates the ball's position, 
+        checks for boundary collisions, 
+        and limits the velocity.
+        """
         self.move()
         self.boundries()
         self.limit_vel()

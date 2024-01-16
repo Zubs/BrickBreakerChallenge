@@ -1,39 +1,90 @@
+"""
+This module contains a Button class for use in a pygame application.
+"""
 import pygame
+from rectangle import Rectangle
+from text import Text
 
 pygame.init()
 screen = pygame.display.set_mode((600, 600))
 screen.fill((255, 255, 255))
 
-
 class Button():
-
-    def __init__(self, screen, colorButton, colorText, cordinates=(0, 0), dimensions=(100, 100), text='Click Here', textSize=10):
+    """
+    This class represents a Button in a pygame application.
+    """
+    def __init__(
+        self,
+        screen,
+        color_button,
+        rectangle = Rectangle(),
+        text = Text()
+    ):
         self.screen = screen
-        self.colorButton = colorButton
-        self.colorText = colorText
-        self.X, self.Y = cordinates
-        self.width, self.length = dimensions
+        self.color_button = color_button
+        self.rectangle = rectangle
         self.text = text
-        self.textSize = textSize
 
     def show(self):
-        pygame.draw.rect(self.screen, self.colorButton,
-                         ((self.X, self.Y), (self.width, self.length)))
-        font = pygame.font.Font('freesansbold.ttf', self.textSize)
-        caption = font.render(self.text, True, self.colorText)
-        self.screen.blit(caption, (int(self.X + self.width*0.05),
-                                   int(self.Y + self.length*0.2)))
+        """
+        This method draws a rectangle on the screen representing the button.
+        It also renders the text on the button.
+        """
+        pygame.draw.rect(
+            self.screen,
+            self.color_button,
+            (
+                (self.rectangle.x, self.rectangle.y),
+                (self.rectangle.width, self.rectangle.length)
+            )
+        )
+        font = pygame.font.Font('freesansbold.ttf', self.text.text_size)
+        caption = font.render(
+            self.text.text,
+            True,
+            self.text.color
+        )
+        self.screen.blit(caption, (int(self.rectangle.x + self.rectangle.width*0.05),
+                                   int(self.rectangle.y + self.rectangle.length*0.2)))
 
-    def isOverMouse(self):
+    def is_over_mouse(self):
+        """
+        Check if the mouse is over the button.
+        """
         x, y = pygame.mouse.get_pos()
-        if self.X < x < self.X + self.width and self.Y < y < self.Y + self.length:
+        if (self.rectangle.x < x < self.rectangle.x + self.rectangle.width and
+            self.rectangle.y < y < self.rectangle.y + self.rectangle.length):
             return True
         return False
 
-    def changeColor(self, changeColorButton, changeColorText):
-        pygame.draw.rect(self.screen, changeColorButton,
-                         ((self.X, self.Y), (self.width, self.length)))
-        font = pygame.font.Font('freesansbold.ttf', self.textSize)
-        caption = font.render(self.text, True, changeColorText)
-        self.screen.blit(caption, (int(self.X + self.width*0.05),
-                                   int(self.Y + self.length*0.2)))
+    def change_color(
+        self,
+        change_color_button,
+        change_color_text
+    ):
+        """
+        This method changes the color of the button and the text on the button.
+
+        Parameters:
+        change_color_button (tuple): The RGB color to change the button to.
+        change_color_text (tuple): The RGB color to change the text to.
+        """
+        pygame.draw.rect(
+            self.screen, 
+            change_color_button,
+            (
+                (self.rectangle.x, self.rectangle.y),
+                (self.rectangle.width, self.rectangle.length)
+            )
+        )
+        font = pygame.font.Font('freesansbold.ttf', self.text.text_size)
+        caption = font.render(
+            self.text.text,
+            True,
+            change_color_text
+        )
+        self.screen.blit(
+            caption,
+            (int(self.rectangle.x + self.rectangle.width * 0.05),
+            int(self.rectangle.y + self.rectangle.length * 0.2))
+        )
