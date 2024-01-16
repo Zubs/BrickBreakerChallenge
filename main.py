@@ -29,9 +29,13 @@ def brick_collision(level: Level, ball: Ball):
     It also removes the hit brick from the level.
     """
     for _, brick in enumerate(level.brick.bricks):
+        global score
+
         x, y = brick
         if (x < ball.position.x < (x + level.brick.length) and 
             y < ball.position.y < (y + level.brick.width)):
+            #increase score by 1
+            score += 1
             # Invert the y direction
             ball.velocity.y_vel = -ball.velocity.y_vel
             center = x + level.brick.length/2
@@ -46,27 +50,55 @@ def brick_collision(level: Level, ball: Ball):
 
 def show_gameover():
     """
-    Displays the 'GAME OVER' message on the screen.
+    Displays the 'GAME OVER' message and the final score on the screen.
     """
-    text = pygame.font.Font("freesansbold.ttf", int(SCR_HEIGHT * 0.1))
+    font_size = int(SCR_HEIGHT * 0.1)
+    text = pygame.font.Font("freesansbold.ttf", font_size)
     gameover = text.render(
         "GAME OVER",
         True,
         (255, 23, 20)
     )
-    screen.blit(gameover, (int(SCR_WIDTH * 0.25), int(SCR_HEIGHT * 0.4)))
+    text_width, text_height = text.size("GAME OVER")
+    screen.blit(gameover, ((SCR_WIDTH - text_width) / 2, (SCR_HEIGHT - text_height) / 2))
+
+    score_text = text.render(
+        f"Final Score: {score}",
+        True,
+        (255, 23, 20)
+    )
+    score_text_width, score_text_height = text.size(f"Final Score: {score}")
+    screen.blit(score_text, ((SCR_WIDTH - score_text_width) / 2, (SCR_HEIGHT - score_text_height) / 2 + text_height))
 
 def show_game_paused():
     """
     Displays the 'GAME PAUSED' message on the screen.
     """
-    text = pygame.font.Font("freesansbold.ttf", int(SCR_HEIGHT * 0.1))
+    font_size = int(SCR_HEIGHT * 0.1)
+    text = pygame.font.Font("freesansbold.ttf", font_size)
     paused = text.render(
         "PAUSED",
         True,
         (255, 23, 20)
     )
-    screen.blit(paused, (int(SCR_WIDTH * 0.25), int(SCR_HEIGHT * 0.4)))
+    text_width, text_height = text.size("PAUSED")
+    screen.blit(paused, ((SCR_WIDTH - text_width) / 2, (SCR_HEIGHT - text_height) / 2))
+
+def show_score():
+    font_size = int(SCR_HEIGHT * 0.025)
+    text = pygame.font.Font("freesansbold.ttf", font_size)
+    score_text = text.render(
+        f"Score: {score}",
+        True,
+        (0, 0, 0)
+    )
+    screen.blit(score_text, (10, 10))
+    lives_text = text.render(
+        f"Lives: {lives}",
+        True,
+        (0, 0, 0)
+    )
+    screen.blit(lives_text, (10, 10 + font_size))
 
 clock = pygame.time.Clock()
 background_color = (200, 200, 200)
@@ -79,6 +111,8 @@ while True:
     over = False
     clicked_replay = False
     paused = False
+    score = 0
+    lives = 3
 
     # paddle movement switches
     key_left = False
@@ -136,6 +170,8 @@ while True:
                 replay_button = Button(
                     screen,
                     (80, 45, 200),
+                    button_dimensions,
+                    button_text
                 )
                 state = 'original'
                 while True:
@@ -156,6 +192,7 @@ while True:
                     pygame.display.update()
 
             screen.fill(background_color)
+            show_score()
             paddle.show()
             level.show()
 
