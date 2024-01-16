@@ -36,13 +36,13 @@ class Level():
             self.brick.rows * self.brick.width,
             self.brick.width
         ):
+            color = random.choice(self.brick_colors)
             for j in range(
                 int(screen.get_width() * 0.1),
                 int(screen.get_width() * 0.9 - self.brick.length) + 1,
                 self.brick.length
             ):
-                self.brick.bricks.append([j, i])
-                self.brick.random_color.append(random.choice(self.brick_colors))
+                self.brick.bricks.append([j, i, color])
 
     def show(self):
         """
@@ -56,7 +56,7 @@ class Level():
                           self.brick.width - self.brick.spacing)
             pygame.draw.rect(
                 self.screen,
-                self.brick_colors[color_index-1],
+                item[2],
                 ((item[0], item[1]), brick_size)
             )
             num += 1

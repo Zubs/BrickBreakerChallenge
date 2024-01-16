@@ -31,7 +31,7 @@ def brick_collision(level: Level, ball: Ball):
     for _, brick in enumerate(level.brick.bricks):
         global score
 
-        x, y = brick
+        x, y, color = brick
         if (x < ball.position.x < (x + level.brick.length) and 
             y < ball.position.y < (y + level.brick.width)):
             #increase score by 1
