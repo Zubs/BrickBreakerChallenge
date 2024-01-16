@@ -30,8 +30,6 @@ def brick_collision(level: Level, ball: Ball):
     """
     for _, brick in enumerate(level.brick.bricks):
         x, y = brick
-        # if (x < ball.position.x < (x + level.brick.length) and
-        #         y > ball.position.y > (y + level.brick.width)):
         if (x < ball.position.x < (x + level.brick.length) and 
             y < ball.position.y < (y + level.brick.width)):
             # Invert the y direction
@@ -58,6 +56,18 @@ def show_gameover():
     )
     screen.blit(gameover, (int(SCR_WIDTH * 0.25), int(SCR_HEIGHT * 0.4)))
 
+def show_game_paused():
+    """
+    Displays the 'GAME PAUSED' message on the screen.
+    """
+    text = pygame.font.Font("freesansbold.ttf", int(SCR_HEIGHT * 0.1))
+    paused = text.render(
+        "PAUSED",
+        True,
+        (255, 23, 20)
+    )
+    screen.blit(paused, (int(SCR_WIDTH * 0.25), int(SCR_HEIGHT * 0.4)))
+
 clock = pygame.time.Clock()
 background_color = (200, 200, 200)
 while True:
@@ -68,6 +78,7 @@ while True:
     # pylint: disable=invalid-name
     over = False
     clicked_replay = False
+    paused = False
 
     # paddle movement switches
     key_left = False
@@ -80,6 +91,8 @@ while True:
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    paused = not paused
                 if event.key == pygame.K_LEFT:
                     key_left = True
                 if event.key == pygame.K_RIGHT:
@@ -92,64 +105,81 @@ while True:
                     paddle.stop()
                     key_right = False
 
-        # GAME LOGIC
+        if not paused:
+            # GAME LOGIC
+            # paddle movement switches
+            if key_left is True:
+                paddle.move_left()
+            if key_right is True:
+                paddle.move_right()
 
-        # paddle movement switches
-        if key_left is True:
-            paddle.move_left()
-        if key_right is True:
-            paddle.move_right()
+            # ball machanics
+            ball.update()
 
-        # ball machanics
-        ball.update()
+            ball_bottom = ball.position.y + ball.ball_radius
+            ball_within_paddle = paddle.paddle_x < ball.position.x < (
+                paddle.paddle_x + paddle.length)
 
-        ball_bottom = ball.position.y + ball.ball_radius
-        ball_within_paddle = paddle.paddle_x < ball.position.x < (
-            paddle.paddle_x + paddle.length)
+            if paddle.paddle_y + 10 > ball_bottom > paddle.paddle_y and ball_within_paddle:
+                ball.collision_change()
+            # brick collision
+            brick_collision(level, ball)
 
-        if paddle.paddle_y + 10 > ball_bottom > paddle.paddle_y and ball_within_paddle:
-            ball.collision_change()
-        # brick collision
-        brick_collision(level, ball)
+            # paddle boundries
+            paddle.boundries()
+            if ball.position.y > SCR_HEIGHT:
+                show_gameover()
+                over = True
+                # REPLAY BUTTON
+                button_dimensions = Rectangle((260, 350), (150, 60))
+                button_text = Text("REPLAY", 30, (200, 250, 255))
+                replay_button = Button(
+                    screen,
+                    (80, 45, 200),
+                )
+                state = 'original'
+                while True:
+                    replay_button.show()
+                    for event in pygame.event.get():
+                        if replay_button.is_over_mouse() is True:
+                            if event.type == pygame.MOUSEBUTTONUP:
+                                clicked_replay = True
+                            state = 'changed'
+                        elif replay_button.is_over_mouse() is False:
+                            state = 'original'
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                    if state == 'changed':
+                        replay_button.change_color((80, 240, 80), (14, 37, 100))
+                    if clicked_replay is True:
+                        break
+                    pygame.display.update()
 
-        # paddle boundries
-        paddle.boundries()
-        if ball.position.y > SCR_HEIGHT:
-            show_gameover()
-            over = True
-            # REPLAY BUTTON
-            button_dimensions = Rectangle((260, 350), (150, 60))
-            button_text = Text("REPLAY", 30, (200, 250, 255))
-            replay_button = Button(
-                screen,
-                (80, 45, 200),
-                button_dimensions,
-                button_text
-            )
-            state = 'original'
-            while True:
-                replay_button.show()
-                for event in pygame.event.get():
-                    if replay_button.is_over_mouse() is True:
-                        if event.type == pygame.MOUSEBUTTONUP:
-                            clicked_replay = True
-                        state = 'changed'
-                    elif replay_button.is_over_mouse() is False:
-                        state = 'original'
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                if state == 'changed':
-                    replay_button.change_color((80, 240, 80), (14, 37, 100))
-                if clicked_replay is True:
-                    break
-                pygame.display.update()
+            screen.fill(background_color)
+            paddle.show()
+            level.show()
 
-        screen.fill(background_color)
-        paddle.show()
-        level.show()
+            ball.show()
+            if over is True:
+                break
 
-        ball.show()
-        if over is True:
-            break
+            pygame.display.update()
+        else:
+            while paused:
+                show_game_paused()
 
-        pygame.display.update()
+                state = 'original'
+                while True:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                                pygame.quit()
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_SPACE:
+                                paused = not paused
+                                break
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                    if not paused:
+                        break
+
+                    pygame.display.update()
