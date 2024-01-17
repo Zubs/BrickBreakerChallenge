@@ -27,14 +27,14 @@ class BrickBreaker:
         self.background_color = (200, 200, 200)
         self.score = 0
         self.lives = 3
-        self.player_level = 1
+        self.player_level = 1 # Max level is 10
         self.over = False
         self.clicked_replay = False
         self.paused = False
         self.key_left = False
         self.key_right = False
-        self.paddle = Paddle(self.screen)
-        self.ball = Ball(self.paddle, self.screen)
+        self.paddle = Paddle(self.screen, self.player_level)
+        self.ball = Ball(self.paddle, self.screen, self.player_level)
         self.level = Level(self.screen, self.background_color)
 
     def brick_collision(self, level: Level, ball: Ball):

@@ -18,11 +18,16 @@ class Ball():
     def __init__(
         self,
         paddle: Paddle,
-        screen: pygame.Surface
+        screen: pygame.Surface,
+        player_level: int = 1
     ):
+        """
+        This method initializes the Ball object with a specified paddle, screen, and player level.
+        """
+        self.player_level = player_level
         self.position = Position(int(screen.get_width() / 2), int(screen.get_height() * 0.8))
         self.velocity = Velocity(8, -8)
-        self.ball_radius = 10
+        self.ball_radius = 21.2 - (1.2 * self.player_level)
         self.paddle = paddle
         self.screen = screen
 

@@ -37,3 +37,10 @@ This is a simple implementation of the classic Brick Breaker game using Pygame.
 - `Collision Detection`: The game checks for collisions between the ball and the other game objects. If the ball hits the paddle or a brick, it bounces back. If the ball hits the bottom of the screen, the game is over.
 
 - `Game Over`: The game ends when the ball hits the bottom of the screen. A game over message is displayed, and the player is given the option to replay the game.
+
+- `Level`: The level is a collection of bricks. The game has 10 levels, and each level has a different arrangement of bricks.
+
+- `Pause/Resume`: The game can be paused by pressing the space bar. Pressing the space bar again will resume the game.
+
+## To Do
+- [ ] Increase ball speed by level

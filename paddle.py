@@ -12,10 +12,14 @@ class Paddle():
     """
     paddle_color = (80, 50, 30)
 
-    def __init__(self, screen: pygame.Surface):
+    def __init__(self, screen: pygame.Surface, player_level: int = 1):
+        """
+        This method initializes the Paddle object with a specified screen.
+        """
+        self.player_level = player_level
         self.paddle_x = int(screen.get_width() * 0.45)
         self.paddle_y = int(screen.get_height() * 0.95)
-        self.length = 120
+        self.length = 410 - (self.player_level * 30)
         self.screen = screen
         self.velocity = 0
 
@@ -23,7 +27,7 @@ class Paddle():
         """
         This method draws the paddle on the screen with a specified thickness.
         """
-        thickness = 10
+        thickness = 20
         pygame.draw.rect(self.screen, self.paddle_color, ((
             self.paddle_x, self.paddle_y), (self.length, thickness)))
 
