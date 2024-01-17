@@ -19,8 +19,8 @@ class BrickBreaker:
     """
     def __init__(self):
         pygame.init()
-        self.screen_width = 800
-        self.screen_height = 600
+        self.screen_width = 1000
+        self.screen_height = 750
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption("Brick Breaker")
         self.clock = pygame.time.Clock()
@@ -49,7 +49,7 @@ class BrickBreaker:
             if (x < self.ball.position.x < (x + self.level.brick.length) and
                 y < self.ball.position.y < (y + self.level.brick.width)):
                 #increase score by 1
-                self.score += 1
+                self.score += self.player_level
                 # Invert the y direction
                 self.ball.velocity.y_vel = -self.ball.velocity.y_vel
                 center = x + self.level.brick.length / 2
@@ -86,6 +86,8 @@ class BrickBreaker:
             ((self.screen_width - text_width) / 2, (self.screen_height - text_height) / 2)
         )
 
+        font_size = int(self.screen_height * 0.08)
+        text = pygame.font.Font("freesansbold.ttf", font_size)
         score_text = text.render(
             f"Final Score: {self.score}",
             True,
@@ -168,14 +170,14 @@ class BrickBreaker:
         """
         font_size = int(self.screen_height * 0.1)
         text = pygame.font.Font("freesansbold.ttf", font_size)
-        self.level_won = text.render(
+        level_won_text = text.render(
             "self.level WON",
             True,
             (50, 205, 50)
         )
         text_width, text_height = text.size("self.level WON")
         self.screen.blit(
-            self.level_won,
+            level_won_text,
             ((self.screen_width - text_width) / 2, (self.screen_height - text_height) / 2)
         )
 
@@ -220,7 +222,10 @@ class BrickBreaker:
                     ball_within_paddle = self.paddle.paddle_x < self.ball.position.x < (
                         self.paddle.paddle_x + self.paddle.length)
 
-                    if self.paddle.paddle_y + 10 > ball_bottom > self.paddle.paddle_y and ball_within_paddle:
+                    if (
+                        self.paddle.paddle_y + 10 > ball_bottom > self.paddle.paddle_y and
+                        ball_within_paddle
+                    ):
                         self.ball.collision_change()
                     # brick collision
                     if self.brick_collision(self.level, self.ball):
@@ -232,7 +237,7 @@ class BrickBreaker:
                         self.show_gameover()
                         self.over = True
                         # REPLAY BUTTON
-                        button_dimensions = Rectangle((260, 350), (150, 60))
+                        button_dimensions = Rectangle((450, 550), (130, 45))
                         button_text = Text("REPLAY", 30, (200, 250, 255))
                         replay_button = Button(
                             self.screen,

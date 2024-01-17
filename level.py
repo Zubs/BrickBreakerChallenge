@@ -31,6 +31,7 @@ class Level():
         self.brick = Brick(int(screen.get_width() * 0.8) // 9)
         self.background_color = background_color
 
+        padding = 10
         for i in range(
             10,
             self.brick.rows * self.brick.width,
@@ -38,8 +39,8 @@ class Level():
         ):
             color = random.choice(self.brick_colors)
             for j in range(
-                int(screen.get_width() * 0.1),
-                int(screen.get_width() * 0.9 - self.brick.length) + 1,
+                int(screen.get_width() * 0.1) + padding,
+                int(screen.get_width() - self.brick.length - padding) + 1,
                 self.brick.length
             ):
                 self.brick.bricks.append([j, i, color])

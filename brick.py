@@ -11,8 +11,8 @@ class Brick:
     def __init__(
         self,
         length,
-        rows = 7,
-        rows_bricks = 9,
+        rows = 10,
+        rows_bricks = 10,
         width = 40,
         spacing = 4
     ):
