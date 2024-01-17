@@ -4,9 +4,9 @@ detecting collisions, and drawing the ball on the screen.
 """
 import pygame
 
-from paddle import Paddle
-from position import Position
-from velocity import Velocity
+from src.paddle import Paddle
+from src.position import Position
+from src.velocity import Velocity
 
 class Ball():
     """

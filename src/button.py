@@ -2,8 +2,8 @@
 This module contains a Button class for use in a pygame application.
 """
 import pygame
-from rectangle import Rectangle
-from text import Text
+from src.rectangle import Rectangle
+from src.text import Text
 
 pygame.init()
 screen = pygame.display.set_mode((600, 600))
@@ -44,8 +44,8 @@ class Button():
             True,
             self.text.color
         )
-        self.screen.blit(caption, (int(self.rectangle.x + self.rectangle.width*0.05),
-                                   int(self.rectangle.y + self.rectangle.length*0.2)))
+        self.screen.blit(caption, (int(self.rectangle.x + self.rectangle.width * 0.05),
+                                   int(self.rectangle.y + self.rectangle.length * 0.2)))
 
     def is_over_mouse(self):
         """
@@ -70,7 +70,7 @@ class Button():
         change_color_text (tuple): The RGB color to change the text to.
         """
         pygame.draw.rect(
-            self.screen, 
+            self.screen,
             change_color_button,
             (
                 (self.rectangle.x, self.rectangle.y),

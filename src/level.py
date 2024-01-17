@@ -5,7 +5,7 @@ display, and removal of bricks in the game.
 """
 import random
 import pygame
-from brick import Brick
+from src.brick import Brick
 
 class Level():
     """
