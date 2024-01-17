@@ -11,12 +11,13 @@ class Brick:
     def __init__(
         self,
         length,
-        rows = 10,
+        player_level = 5,
         rows_bricks = 10,
         width = 40,
-        spacing = 4
+        spacing = 4,
     ):
-        self.rows = rows
+        self.player_level = player_level
+        self.rows = player_level if player_level > 5 else 5
         self.rows_bricks = rows_bricks
         self.length = length
         self.width = width

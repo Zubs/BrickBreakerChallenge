@@ -35,7 +35,7 @@ class BrickBreaker:
         self.key_right = False
         self.paddle = Paddle(self.screen, self.player_level)
         self.ball = Ball(self.paddle, self.screen, self.player_level)
-        self.level = Level(self.screen, self.background_color)
+        self.level = Level(self.screen, self.background_color, self.player_level)
 
     def brick_collision(self, level: Level, ball: Ball):
         """
@@ -48,7 +48,7 @@ class BrickBreaker:
             x, y, color = brick
             if (x < self.ball.position.x < (x + self.level.brick.length) and
                 y < self.ball.position.y < (y + self.level.brick.width)):
-                #increase score by 1
+                #increase score
                 self.score += self.player_level
                 # Invert the y direction
                 self.ball.velocity.y_vel = -self.ball.velocity.y_vel
@@ -147,22 +147,21 @@ class BrickBreaker:
         )
         self.screen.blit(player_level_text, (10, 10 + font_size * 2))
 
-    def reset_game(self):
+    def reset_game(self, player_level: int = 1):
         """
         Resets the game to its initial state.
         """
-        self.score = 0
         self.lives = 3
-        self.player_level = 1
+        self.player_level = player_level
         self.over = False
         self.clicked_replay = False
         self.paused = False
         self.key_left = False
         self.key_right = False
 
-        self.paddle = Paddle(self.screen)
-        self.ball = Ball(self.paddle, self.screen)
-        self.level = Level(self.screen, self.background_color)
+        self.paddle = Paddle(self.screen, self.player_level)
+        self.ball = Ball(self.paddle, self.screen, self.player_level)
+        self.level = Level(self.screen, self.background_color, self.player_level)
 
     def show_level_won(self):
         """
@@ -171,7 +170,7 @@ class BrickBreaker:
         font_size = int(self.screen_height * 0.1)
         text = pygame.font.Font("freesansbold.ttf", font_size)
         level_won_text = text.render(
-            "self.level WON",
+            f"Level {self.player_level} WON",
             True,
             (50, 205, 50)
         )
@@ -180,6 +179,7 @@ class BrickBreaker:
             level_won_text,
             ((self.screen_width - text_width) / 2, (self.screen_height - text_height) / 2)
         )
+        self.reset_game(self.player_level + 1)
 
     def game_loop(self):
         """

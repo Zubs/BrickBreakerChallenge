@@ -25,10 +25,12 @@ class Level():
     def __init__(
         self,
         screen: pygame.Surface,
-        background_color: tuple
+        background_color: tuple,
+        player_level: int = 1
     ):
+        self.player_level = player_level
         self.screen = screen
-        self.brick = Brick(int(screen.get_width() * 0.8) // 9)
+        self.brick = Brick(int(screen.get_width() * 0.8) // self.player_level, self.player_level)
         self.background_color = background_color
 
         padding = 10
