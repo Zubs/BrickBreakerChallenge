@@ -12,6 +12,7 @@ from button import Button
 from paddle import Paddle
 from text import Text
 from rectangle import Rectangle
+from highscore import HighScore
 
 class BrickBreaker:
     """
@@ -36,6 +37,7 @@ class BrickBreaker:
         self.paddle = Paddle(self.screen, self.player_level)
         self.ball = Ball(self.paddle, self.screen, self.player_level)
         self.level = Level(self.screen, self.background_color, self.player_level)
+        self.highscore = HighScore()
 
     def brick_collision(self, level: Level, ball: Ball):
         """
@@ -68,6 +70,18 @@ class BrickBreaker:
                     return True  # Return a flag indicating the self.level is won
 
         return False
+    
+    def show_high_scores(self):
+        font_size = int(self.screen_height * 0.025)
+        text = pygame.font.Font("freesansbold.ttf", font_size)
+        high_scores = self.highscore.get_high_scores()
+        for i, score in enumerate(high_scores):
+            score_text = text.render(
+                f"{i+1}. {score}",
+                True,
+                (0, 0, 0)
+            )
+            self.screen.blit(score_text, (10, 10 + font_size * (i+3)))
 
     def show_gameover(self):
         """
@@ -101,6 +115,21 @@ class BrickBreaker:
                 (self.screen_height - score_text_height) / 2 + text_height
             )
         )
+        if self.highscore.add_score(self.score):
+            new_high_score_text = text.render(
+                "New High Score!!!",
+                True,
+                (50, 205, 50)
+            )
+            new_high_score_text_width, new_high_score_text_height = text.size("New High Score!!!")
+            self.screen.blit(
+                new_high_score_text,
+                (
+                    (self.screen_width - new_high_score_text_width) / 2,
+                    (self.screen_height - new_high_score_text_height) / 2 + text_height + score_text_height
+                )
+            )
+            # self.show_new_high_scores()
 
     def show_game_paused(self):
         """
@@ -174,7 +203,7 @@ class BrickBreaker:
             True,
             (50, 205, 50)
         )
-        text_width, text_height = text.size("self.level WON")
+        text_width, text_height = text.size(f"Level {self.player_level} WON")
         self.screen.blit(
             level_won_text,
             ((self.screen_width - text_width) / 2, (self.screen_height - text_height) / 2)
