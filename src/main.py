@@ -310,8 +310,6 @@ class BrickBreaker:
                                     if event.key == pygame.K_SPACE:
                                         self.paused = not self.paused
                                         break
-                                if event.type == pygame.QUIT:
-                                    pygame.quit()
                             if not self.paused:
                                 break
 

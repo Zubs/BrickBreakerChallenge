@@ -11,6 +11,7 @@ class Paddle():
     The Paddle can be moved left or right and has boundary checks.
     """
     paddle_color = (80, 50, 30)
+    paddle_thickness = 20
 
     def __init__(self, screen: pygame.Surface, player_level: int = 1):
         """
@@ -27,9 +28,8 @@ class Paddle():
         """
         This method draws the paddle on the screen with a specified thickness.
         """
-        thickness = 20
         pygame.draw.rect(self.screen, self.paddle_color, ((
-            self.paddle_x, self.paddle_y), (self.length, thickness)))
+            self.paddle_x, self.paddle_y), (self.length, self.paddle_thickness)))
 
     def move_left(self):
         """

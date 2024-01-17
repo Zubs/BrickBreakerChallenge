@@ -4,7 +4,10 @@ This is a simple implementation of the classic Brick Breaker game using Pygame.
 ## Prerequisites
 - Python 3.x: The game is written in Python 3. Make sure you have it installed on your system.
 
-- Pygame: Pygame is a set of Python modules designed for writing video games. You can install it using pip: `pip install pygame`.
+- Pygame: Pygame is a set of Python modules designed for writing video games. You can install it using pip: 
+```
+pip3 install pygame
+```
 
 ## How to Run the Game
 1. Clone the repository: `git clone https://github.com/Zubs/BrickBreakerChallenge`.
@@ -33,6 +36,18 @@ This is a simple implementation of the classic Brick Breaker game using Pygame.
 - `Ball Movement`: The ball moves in a straight line until it hits a wall, the paddle, or a brick. When the ball hits a wall or the paddle, it bounces back. When the ball hits a brick, the brick is destroyed and your score increases, and the ball bounces back.
 - `Game Over`: The game ends when the ball hits the bottom of the screen. A game over message is displayed, and the player is given the option to replay the game. A new high score message is displayed if the score makes the top 5 high scores list.
 - `Pause/Resume`: The game can be paused by pressing the space bar. Pressing the space bar again will resume the game.
+
+## Testing
+The game is tested using the unittest module. The tests are written in the tests directory.
+You can install `unittest` using the following command:
+```
+pip3 install unittest
+```
+
+To run the tests, run the following command:
+```
+python3 -m unittest discover tests
+```
 
 ## Screenshots
 ![Game Paused](images/game_paused.png)
